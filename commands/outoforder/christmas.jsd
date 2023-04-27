@@ -1,0 +1,25 @@
+const Discord = require(`discord.js`)
+
+module.exports = {
+    help: {
+        name: "christmas",
+        aliases: "",
+        usage: "play **[URL or Song Name]**",
+        desc: `Plays the URL.`
+    },
+    run: async (client, message, args, prefix, botcolor, bicon, authorbot) => {
+
+        if (!message.member.voice.channel) return message.channel.send(":x: | You are not in a voice channel!");
+            message.react("🎄")
+            query = `https://www.youtube.com/watch?v=T_aiaYkcSDo&list=PLkqz3S84Tw-Sg_5kur5nP3gQxZBSc3A5z`
+            if (message.guild.me.voice.channel && message.member.voice.channel.id !== message.guild.me.voice.channel.id) return message.channel.send("❌ | You are not in my voice channel!");
+            client.player.play(message.member.voice.channel, query, {
+                textChannel: message.channel,
+                message
+            })
+            
+
+
+
+    }
+};

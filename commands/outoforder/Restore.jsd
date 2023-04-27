@@ -1,0 +1,36 @@
+let Discord = require(`discord.js`)
+const fs = require('fs');
+
+module.exports = {
+    help: {
+        name: "restore",
+        aliases: "",
+        usage: "save",
+        desc: `Saves the queue.`
+    },
+    run: async (client, message, args, prefix, botcolor, bicon, authorbot, authicon) => {
+        if (!message.member.voice.channel) return message.channel.send(":x: | You are not in a voice channel!");
+
+        let Queues = JSON.parse(fs.readFileSync("./json/queue.json", "utf8"));
+        let Queue = Queues[message.guild.id] ? Queues[message.guild.id].Queues : []
+        let UpdateEmbed = new Discord.MessageEmbed()
+            .setColor(botcolor)
+            .setDescription("**:white_check_mark: | Loading queue!**")
+        msg = await message.channel.send({embeds: [UpdateEmbed]})
+        let CustomPlaylist = await client.player.createCustomPlaylist(Queue, {
+            textChannel: message.channel,
+            message
+        })
+        // console.log(CustomPlaylist)
+        await client.player.play(message.member.voice.channel, CustomPlaylist, {
+            textChannel: message.channel,
+            message
+        })
+        
+        UpdateEmbed.setDescription(":white_check_mark: | Loaded `" + Queue.length +"` songs!")
+        return msg.edit({
+            embeds: [UpdateEmbed]
+        });
+
+    }
+};
